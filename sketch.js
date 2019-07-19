@@ -6,6 +6,7 @@ let player = Object.create(ship);
 let alien = {
     alienX: 50,
     alienY: 50,
+    alienRadius: 500,
 }
 let enemy = Object.create(alien);
 function setup() {
@@ -27,15 +28,16 @@ function draw(){
     }
     background(0);
     enemy.alienX += 2;
-    ellipse(enemy.alienX, enemy.alienY, 10, 10);
+    ellipse(enemy.alienX, enemy.alienY, enemy.alienRadius, enemy.alienRadius);
     rect(player.shipX, player.shipY, 75, 50);
     if(keyIsDown(13)) {
         createBullet();
     }
-}
-function keyPressed() {
-}
-function keyReleased() {
+    const collision = checkForCollision();
+    if(collision) {
+        fill(255);
+        ellipse(enemy.alienX, enemy.alienY, enemy.alienRadius, enemy.alienRadius);
+    }
 }
 function createBullet() {
     // let shot = Object.create(bullet);
@@ -51,4 +53,8 @@ function moveBullet() {
         shot.bulletY = player.shipY;
         shot.bulletX = player.shipX;
     }
+}
+function checkForCollision() {
+    const distance = dist(enemy.alienX, enemy.alienY, shot.bulletX, shot.bulletY);
+    return distance <= enemy.alienRadius;
 }
